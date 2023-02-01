@@ -1,36 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:tic_tac_toe/utilities/game_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:tic_tac_toe/models/game_tile.dart';
+import 'victory_screen.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    GameController gameController = Provider.of<GameController>(context, listen: false);
+        gameController.initBoard();
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           //crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [TurnBox(),
+          children: [
+            TurnBox(),
             SizedBox(height: 30),
-            GameBoard()],
+            GameBoard(),
+            ElevatedButton(
+                onPressed: () {
+                  gameController.resetBoard();
+                },
+                child: Text('Reset'))
+          ],
         ),
       ),
     );
   }
 }
 
-class TurnBox extends StatefulWidget {
+class TurnBox extends StatelessWidget {
   const TurnBox({Key? key}) : super(key: key);
 
   @override
-  State<TurnBox> createState() => _TurnBoxState();
-}
-
-class _TurnBoxState extends State<TurnBox> {
-  @override
   Widget build(BuildContext context) {
     return Container(
-      child: const Text('Player UNO', style: TextStyle(fontSize: 50),),
+      child: Consumer<GameController>(
+        builder: (context, gameController, child) {
+          String playerText;
+          switch (gameController.currentPlayer) {
+            case Players.player1:
+              playerText = 'Player 1 Turn';
+              break;
+            case Players.player2:
+              playerText = 'Player 2 Turn';
+              break;
+            case Players.ai:
+              playerText = 'AI Turn';
+              break;
+          }
+          return Text(
+            playerText,
+            style: TextStyle(fontSize: 50),
+          );
+        },
+      ),
     );
   }
 }
@@ -40,40 +67,43 @@ class GameBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GameController gameController = Provider.of<GameController>(context);
+    List<GameTile> gameTiles = gameController.gameBoard;
     return SizedBox.square(
       dimension: 300,
-      child: GridView.count(
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: gameController.fieldSize,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
+        ),
         padding: EdgeInsets.zero,
-        crossAxisCount: 3,
-        crossAxisSpacing: 5,
-        mainAxisSpacing: 5,
         physics: const NeverScrollableScrollPhysics(),
-        children: [
-          ElevatedButton(onPressed:() {}, child: Text('A')),
-          ElevatedButton(onPressed:() {}, child: Text('B')),
-          ElevatedButton(onPressed:() {}, child: Text('C')),
-          ElevatedButton(onPressed:() {}, child: Text('D')),
-          ElevatedButton(onPressed:() {}, child: Text('E')),
-          ElevatedButton(onPressed:() {}, child: Text('F')),
-          ElevatedButton(onPressed:() {}, child: Text('G')),
-          ElevatedButton(onPressed:() {}, child: Text('H')),
-          ElevatedButton(onPressed:() {}, child: Text('I')),
-        ],
+        itemCount: gameController.fieldSize * gameController.fieldSize,
+        itemBuilder: (context, index) {
+          Icon? gameIcon;
+          switch (gameTiles[index].tileStatus) {
+            case TileStatus.empty:
+              gameIcon = null;
+              break;
+            case TileStatus.cross:
+              gameIcon = const Icon(Icons.close);
+              break;
+            case TileStatus.circle:
+              gameIcon = const Icon(Icons.brightness_1_outlined);
+              break;
+          }
+          return ElevatedButton(
+            onPressed: () {
+              var winner=gameController.updateTile(index);
+              if (winner!=null){
+                showDialog(context: context, builder: (_)=>VictoryScreen());
+              };
+            },
+            child: gameIcon,
+          );
+        },
       ),
     );
-  }
-}
-
-class GameTile extends StatefulWidget {
-  const GameTile({Key? key}) : super(key: key);
-
-  @override
-  State<GameTile> createState() => _GameTileState();
-}
-
-class _GameTileState extends State<GameTile> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

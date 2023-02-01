@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/game_board.dart';
+import 'package:provider/provider.dart';
+import 'utilities/game_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,9 +14,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Tic-Tac-Toe',
-      home: GameScreen(),
+    return ChangeNotifierProvider(
+      create: (context)=>GameController(),
+      child: const MaterialApp(
+        title: 'Tic-Tac-Toe',
+        home: GameScreen(),
+        //navigatorKey: navigatorKey,
+      ),
     );
   }
 }
