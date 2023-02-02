@@ -5,17 +5,46 @@ import 'win_condition_list.dart';
 
 enum Players {player1, player2}
 enum Result {player1Win, player2Win, draw}
+enum GameState{newGame, inProgress, ended}
 
 class GameController extends ChangeNotifier {
+
+  GameController(){
+    initBoard();
+  }
+
   int fieldSize = 3;
   late List<GameTile> gameBoard;
   Players currentPlayer = Players.player1;
-  Result result=Result.draw;
-  bool gameEnded = false;
+  late Result result;
+  GameState gameState=GameState.newGame;
 
-  initBoard() {
+  void changeFieldSize(String action){
+    if ((action=='+')&&fieldSize<7){
+      fieldSize++;
+    } else if (((action=='-')&&fieldSize>3)) {
+      fieldSize--;
+    }
+    initBoard();
+    notifyListeners();
+  }
+
+  void startNewGame(){
+    fieldSize=3;
+    currentPlayer=Players.player1;
+    gameState=GameState.newGame;
+    initBoard();
+    notifyListeners();
+  }
+
+  void start(){
+    gameState=GameState.inProgress;
+    notifyListeners();
+  }
+
+  void initBoard() {
     gameBoard = List<GameTile>.generate(fieldSize* fieldSize, (index) => GameTile(index));
-    return gameBoard;
+    gameState=GameState.newGame;
   }
 
   void updateTile(int tileId) {
@@ -33,18 +62,20 @@ class GameController extends ChangeNotifier {
           break;
         case 'Draw' :
           result=Result.draw;
-          gameEnded = true;
+          gameState=GameState.ended;
           break;
         case TileStatus.circle:
           result=Result.player2Win;
-          gameEnded = true;
+          gameState=GameState.ended;
           break;
         case TileStatus.cross:
           result=Result.player1Win;
-          gameEnded = true;
+          gameState=GameState.ended;
           break;
       }
-      _changeTurn();
+      if (gameState!=GameState.ended) {
+        _changeTurn();
+      }
       notifyListeners();
     }
   }
@@ -54,6 +85,7 @@ class GameController extends ChangeNotifier {
       tiles.tileStatus = TileStatus.empty;
     }
     currentPlayer = Players.player1;
+    gameState=GameState.inProgress;
     notifyListeners();
   }
 

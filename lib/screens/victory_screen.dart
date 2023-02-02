@@ -34,17 +34,16 @@ class VictoryScreen extends StatelessWidget {
               'Game Over',
               style: customTextStyle(20),
             ),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             Text(
               victoryText,
               style: customTextStyle(20),
             ),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-                gameController.initBoard();
-                gameController.gameEnded = false;
+                gameController.startNewGame();
               },
               style: ElevatedButton.styleFrom(fixedSize: const Size(150, 50)),
               child: Text('New Game', style: customTextStyle(20)),

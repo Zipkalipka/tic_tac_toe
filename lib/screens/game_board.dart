@@ -10,31 +10,16 @@ class GameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GameController gameController =
-        Provider.of<GameController>(context, listen: false);
-    gameController.initBoard();
     return Scaffold(
       body: Center(
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 180,),
-            const TurnBox(),
-            const SizedBox(height: 30),
-            const GameBoard(),
-            const SizedBox(height: 100,),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(fixedSize: const Size(300,70)),
-                onPressed: (){},
-                onLongPress: () {
-                  gameController.resetBoard();
-                  // showDialog(
-                  //     context: context,
-                  //     barrierDismissible: false,
-                  //     builder: (_) => const VictoryScreen());
-                },
-                child: Text('Hold to Restart',style: customTextStyle(30),))
+          children: const [
+            SizedBox(height: 180,),
+            TurnBox(),
+            SizedBox(height: 30),
+            GameBoard(),
+            BottomFeatures()
           ],
         ),
       ),
@@ -92,25 +77,89 @@ class GameBoard extends StatelessWidget {
               gameIcon = null;
               break;
             case TileStatus.cross:
-              gameIcon = const Icon(Icons.close,size: 60,);
+              gameIcon = const Icon(Icons.close);
               break;
             case TileStatus.circle:
-              gameIcon = const Icon(Icons.brightness_1_outlined,size: 50);
+              gameIcon = const Icon(Icons.brightness_1_outlined);
               break;
           }
           return ElevatedButton(
+            style: ElevatedButton.styleFrom(padding: EdgeInsets.zero),
             onPressed: () {
-              gameController.updateTile(index);
-              if (gameController.gameEnded) {
-                showDialog(
-                    context: context, builder: (_) => const VictoryScreen());
+              if (gameController.gameState != GameState.newGame) {
+                gameController.updateTile(index);
+                if (gameController.gameState == GameState.ended) {
+                  showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (_) => const VictoryScreen());
+                }
               }
-              ;
             },
-            child: FittedBox(child: gameIcon),
+            child:SizedBox.expand(child: FittedBox(fit:BoxFit.contain, child: gameIcon)),
           );
         },
       ),
     );
+  }
+}
+
+class BottomFeatures extends StatelessWidget {
+  const BottomFeatures({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    GameController gameController = Provider.of<GameController>(context);
+    if (gameController.gameState == GameState.newGame) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 10,),
+          Text('Choose Field Size', style: customTextStyle(30),),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(fixedSize: const Size(60, 60)),
+                  onPressed: () {
+                    gameController.changeFieldSize('-');
+                  },
+                  child: const Icon(Icons.arrow_back_ios, size: 50)),
+              const SizedBox(width: 30,),
+              Text('${gameController.fieldSize}', style: customTextStyle(40)),
+              const SizedBox(width: 30,),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(fixedSize: const Size(60, 60)),
+                  onPressed: () {
+                    gameController.changeFieldSize('+');
+                  },
+                  child: const Icon(Icons.arrow_forward_ios, size: 50))
+            ],
+          ),
+          const SizedBox(height: 30,),
+          ElevatedButton(
+              onPressed: () {
+                gameController.start();
+              },
+              child: Text('Start', style: customTextStyle(40),))
+        ],
+      );
+    } else {
+      return Column(children: [
+        const SizedBox(
+          height: 100,
+        ),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(fixedSize: const Size(300, 70)),
+            onPressed: () {},
+            onLongPress: () {
+              gameController.resetBoard();
+            },
+            child: Text('Hold to Restart',
+              style: customTextStyle(30),
+            )),
+      ]);
+    }
   }
 }
