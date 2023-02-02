@@ -11,28 +11,31 @@ class TurnBox extends StatelessWidget {
     return SizedBox(
       height: 250,
       width: 400,
-      child: Center(
-        child:
-        Consumer<GameController>(
-          builder: (context, gameController, child) {
-            String playerText;
-            if (gameController.gameMode!=GameMode.solo) {
-              switch (gameController.currentPlayer) {
-                case Players.player1:
-                  playerText = 'Player 1 Turn';
-                  break;
-                case Players.player2:
-                  playerText = 'Player 2 Turn';
-                  break;
+      child: Padding(
+        padding: const EdgeInsets.only(top: 60),
+        child: Center(
+          child:
+          Consumer<GameController>(
+            builder: (context, gameController, child) {
+              String playerText;
+              if (gameController.gameMode!=GameMode.solo) {
+                switch (gameController.currentPlayer) {
+                  case Players.player1:
+                    playerText = 'Player 1 Turn';
+                    break;
+                  case Players.player2:
+                    playerText = 'Player 2 Turn';
+                    break;
+                }
+              } else {
+                playerText ='Solo Mode';
               }
-            } else {
-              playerText ='Solo Mode';
-            }
-            return Text(
-              playerText,
-              style: customTextStyle(40),
-            );
-          },
+              return Text(
+                playerText,
+                style: customTextStyle(40),
+              );
+            },
+          ),
         ),
       ),
     );

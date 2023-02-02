@@ -11,14 +11,15 @@ class HistoryScroll extends StatelessWidget {
   Widget build(BuildContext context) {
     GameController gameController =
         Provider.of<GameController>(context, listen: false);
+    PageController pageController=PageController(viewportFraction: 0.8);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      width: 300,
-      height: 300,
-      child: ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      width: 350,
+      height: 280,
+      child: PageView.builder(
           itemCount: gameController.gameTurn,
-          padding: const EdgeInsets.only(right: 20),
-          //physics: PageScrollPhysics(),
+          controller: pageController,
+          physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           reverse: true,
           itemBuilder: (_, index) {
@@ -32,8 +33,8 @@ class HistoryScroll extends StatelessWidget {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  width: 200,
-                  height: 200,
+                  width: 300,
+                  height: 250,
                   child: HistoryGenerator(
                     turnToRender: index,
                   ),
@@ -69,15 +70,15 @@ class HistoryGenerator extends StatelessWidget {
         IconData? gameIcon;
 
         if (gameController.gameBoard[index].turn ==
-            (gameController.gameTurn - turnToRender-1)) {
+            (gameController.gameTurn - turnToRender - 1)) {
           iconColor = Colors.orange;
         }
 
         if (gameController.gameBoard[index].turn >
-            (gameController.gameTurn - turnToRender-1)){
+            (gameController.gameTurn - turnToRender - 1)) {
           gameIcon = null;
         } else {
-          switch (gameController.gameBoard[index].tileStatus){
+          switch (gameController.gameBoard[index].tileStatus) {
             case TileStatus.empty:
               gameIcon = null;
               break;
@@ -98,10 +99,13 @@ class HistoryGenerator extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(5)),
             ),
-            Icon(
-              gameIcon,
-              color: iconColor,
-            )
+            SizedBox.expand(
+                child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Icon(
+                      gameIcon,
+                      color: iconColor,
+                    )))
           ],
         );
       },

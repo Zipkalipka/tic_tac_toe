@@ -111,11 +111,6 @@ class GameController extends ChangeNotifier {
       if (gameState!=GameState.newGame){
         _writeTurn(tileId);
       }
-
-      var twoDgameboard = List.generate(fieldSize,
-              (i) => List.generate(fieldSize, (j) => gameBoard[i * fieldSize + j].turn));
-      print(twoDgameboard);
-
       notifyListeners();
     }
   }
