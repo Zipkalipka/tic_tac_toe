@@ -20,6 +20,7 @@ class GameController extends ChangeNotifier {
   late Result result;
   GameMode gameMode=GameMode.duel;
   GameState gameState=GameState.newGame;
+  int gameTurn = 1;
 
   void soloMode (){
     gameMode=GameMode.solo;
@@ -47,18 +48,9 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  void changeFieldSize(String action){
-    if ((action=='+')&&fieldSize<7){
-      fieldSize++;
-    } else if (((action=='-')&&fieldSize>3)) {
-      fieldSize--;
-    }
-    initBoard();
-    notifyListeners();
-  }
-
   void startNewGame(){
     fieldSize=3;
+    gameTurn=1;
     currentPlayer=Players.player1;
     gameState=GameState.newGame;
     initBoard();
@@ -85,6 +77,10 @@ class GameController extends ChangeNotifier {
           gameBoard[tileId].tileStatus = TileStatus.circle;
           break;
       }
+      gameBoard[tileId].turn=gameTurn;
+      print(gameTurn);
+      gameTurn++;
+
       switch (winCheck(tileId, gameBoard, fieldSize)) {
         case null:
           break;
@@ -114,6 +110,7 @@ class GameController extends ChangeNotifier {
     }
     currentPlayer = Players.player1;
     gameState=GameState.inProgress;
+    gameTurn=1;
     notifyListeners();
   }
 
