@@ -15,9 +15,9 @@ class GameScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: const [
-            SizedBox(height: 180,),
+            SizedBox(height: 140,),
             TurnBox(),
-            SizedBox(height: 30),
+            SizedBox(height: 70),
             GameBoard(),
             BottomFeatures()
           ],
@@ -151,13 +151,22 @@ class BottomFeatures extends StatelessWidget {
           height: 100,
         ),
         ElevatedButton(
-            style: ElevatedButton.styleFrom(fixedSize: const Size(300, 70)),
-            onPressed: () {},
-            onLongPress: () {
+            style: ElevatedButton.styleFrom(fixedSize: const Size(300, 100),padding: EdgeInsets.zero),
+            onPressed: () {
               gameController.resetBoard();
             },
-            child: Text('Hold to Restart',
-              style: customTextStyle(30),
+            onLongPress: () {
+              gameController.startNewGame();
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:[
+                Text('Press to Restart',
+                  style: customTextStyle(25),),
+                Text('Hold for a New Game',
+                  style: customTextStyle(25),)
+              ]
             )),
       ]);
     }
