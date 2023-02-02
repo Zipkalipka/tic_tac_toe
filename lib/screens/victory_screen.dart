@@ -13,7 +13,11 @@ class VictoryScreen extends StatelessWidget {
         Provider.of<GameController>(context, listen: false);
     switch (gameController.result) {
       case Result.player1Win:
-        victoryText = 'Player 1 Wins';
+        if (gameController.gameMode==GameMode.solo){
+          victoryText = 'You Won!\nGet Some Friends!';
+        } else {
+          victoryText = 'Player 1 Wins';
+        }
         break;
       case Result.player2Win:
         victoryText = 'Player 2 Wins';
@@ -38,6 +42,7 @@ class VictoryScreen extends StatelessWidget {
             Text(
               victoryText,
               style: customTextStyle(20),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10,),
             ElevatedButton(

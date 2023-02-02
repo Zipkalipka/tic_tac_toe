@@ -14,12 +14,63 @@ class GameScreen extends StatelessWidget {
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            SizedBox(height: 140,),
-            TurnBox(),
-            SizedBox(height: 70),
-            GameBoard(),
-            BottomFeatures()
+          children: layoutSelector(context),
+        ),
+      ),
+    );
+  }
+}
+
+class GameModeSelection extends StatelessWidget {
+  const GameModeSelection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    bool soloChecked;
+    bool duelChecked;
+    GameController gameController = Provider.of<GameController>(context);
+    if (gameController.gameMode==GameMode.solo) {
+      soloChecked = true;
+      duelChecked=false;
+    } else {
+      duelChecked=true;
+      soloChecked=false;
+    }
+    return SizedBox(
+      height: 250,
+      width: 400,
+      child: Center(
+        child:
+          Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Solo', style: customTextStyle(30),),
+                Transform.scale(
+                  scale: 2,
+                  child: Checkbox(value: soloChecked, onChanged: (bool? value) {
+                      gameController.soloMode();
+                  }),
+                ),
+              ],
+            ),
+            const SizedBox(width: 70,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text('Duel', style: customTextStyle(30),),
+              Transform.scale(
+                scale: 2,
+                child: Checkbox(value: duelChecked, onChanged: (bool? value) {
+                    gameController.duelMode();
+                }),
+              ),
+            ],)
           ],
         ),
       ),
@@ -27,27 +78,39 @@ class GameScreen extends StatelessWidget {
   }
 }
 
+
 class TurnBox extends StatelessWidget {
   const TurnBox({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GameController>(
-      builder: (context, gameController, child) {
-        String playerText;
-        switch (gameController.currentPlayer) {
-          case Players.player1:
-            playerText = 'Player 1 Turn';
-            break;
-          case Players.player2:
-            playerText = 'Player 2 Turn';
-            break;
-        }
-        return Text(
-          playerText,
-          style: customTextStyle(40),
-        );
-      },
+    return SizedBox(
+      height: 250,
+      width: 400,
+      child: Center(
+        child:
+          Consumer<GameController>(
+          builder: (context, gameController, child) {
+            String playerText;
+            if (gameController.gameMode!=GameMode.solo) {
+              switch (gameController.currentPlayer) {
+                case Players.player1:
+                  playerText = 'Player 1 Turn';
+                  break;
+                case Players.player2:
+                  playerText = 'Player 2 Turn';
+                  break;
+              }
+            } else {
+              playerText ='Solo Mode';
+            }
+            return Text(
+              playerText,
+              style: customTextStyle(40),
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -104,13 +167,12 @@ class GameBoard extends StatelessWidget {
   }
 }
 
-class BottomFeatures extends StatelessWidget {
-  const BottomFeatures({Key? key}) : super(key: key);
+class BottomNewGame extends StatelessWidget {
+  const BottomNewGame({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     GameController gameController = Provider.of<GameController>(context);
-    if (gameController.gameState == GameState.newGame) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -123,7 +185,7 @@ class BottomFeatures extends StatelessWidget {
                   style:
                       ElevatedButton.styleFrom(fixedSize: const Size(60, 60)),
                   onPressed: () {
-                    gameController.changeFieldSize('-');
+                    gameController.decreaseFieldSize();
                   },
                   child: const Icon(Icons.arrow_back_ios, size: 50)),
               const SizedBox(width: 30,),
@@ -132,7 +194,7 @@ class BottomFeatures extends StatelessWidget {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(fixedSize: const Size(60, 60)),
                   onPressed: () {
-                    gameController.changeFieldSize('+');
+                    gameController.increaseFieldSize();
                   },
                   child: const Icon(Icons.arrow_forward_ios, size: 50))
             ],
@@ -145,20 +207,26 @@ class BottomFeatures extends StatelessWidget {
               child: Text('Start', style: customTextStyle(40),))
         ],
       );
-    } else {
-      return Column(children: [
-        const SizedBox(
-          height: 100,
-        ),
-        ElevatedButton(
-            style: ElevatedButton.styleFrom(fixedSize: const Size(300, 100),padding: EdgeInsets.zero),
-            onPressed: () {
-              gameController.resetBoard();
-            },
-            onLongPress: () {
-              gameController.startNewGame();
-            },
-            child: Column(
+  }
+}
+class BottomPlayMode extends StatelessWidget {
+  const BottomPlayMode({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    GameController gameController = Provider.of<GameController>(context);
+    return Column(children: [
+      const SizedBox(
+        height: 100,
+      ),
+      ElevatedButton(
+          style: ElevatedButton.styleFrom(fixedSize: const Size(300, 100),padding: EdgeInsets.zero),
+          onPressed: () {
+            gameController.resetBoard();
+          },
+          onLongPress: () {
+            gameController.startNewGame();
+          },
+          child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children:[
@@ -167,8 +235,28 @@ class BottomFeatures extends StatelessWidget {
                 Text('Hold for a New Game',
                   style: customTextStyle(25),)
               ]
-            )),
-      ]);
-    }
+          )
+      ),
+    ]
+    );
   }
+}
+
+List<Widget> layoutSelector(context) {
+  List<Widget> layout;
+  GameController gameController = Provider.of<GameController>(context);
+  if (gameController.gameState==GameState.newGame){
+    layout=const [
+      GameModeSelection(),
+      GameBoard(),
+      BottomNewGame()
+    ];
+  } else {
+    layout=const[
+      TurnBox(),
+      GameBoard(),
+      BottomPlayMode()
+    ];
+  }
+  return layout;
 }

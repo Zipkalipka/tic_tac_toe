@@ -6,6 +6,7 @@ import 'win_condition_list.dart';
 enum Players {player1, player2}
 enum Result {player1Win, player2Win, draw}
 enum GameState{newGame, inProgress, ended}
+enum GameMode{solo, duel}
 
 class GameController extends ChangeNotifier {
 
@@ -17,7 +18,34 @@ class GameController extends ChangeNotifier {
   late List<GameTile> gameBoard;
   Players currentPlayer = Players.player1;
   late Result result;
+  GameMode gameMode=GameMode.duel;
   GameState gameState=GameState.newGame;
+
+  void soloMode (){
+    gameMode=GameMode.solo;
+    notifyListeners();
+  }
+
+  void duelMode(){
+    gameMode=GameMode.duel;
+    notifyListeners();
+  }
+
+  void decreaseFieldSize() {
+    if (fieldSize>3){
+      fieldSize--;
+      initBoard();
+      notifyListeners();
+    }
+  }
+
+  void increaseFieldSize() {
+    if (fieldSize<7){
+      fieldSize++;
+      initBoard();
+      notifyListeners();
+    }
+  }
 
   void changeFieldSize(String action){
     if ((action=='+')&&fieldSize<7){
@@ -73,7 +101,7 @@ class GameController extends ChangeNotifier {
           gameState=GameState.ended;
           break;
       }
-      if (gameState!=GameState.ended) {
+      if ((gameState==GameState.inProgress)&&(gameMode==GameMode.duel)) {
         _changeTurn();
       }
       notifyListeners();
