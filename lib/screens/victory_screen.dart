@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../modules/turn_history_scroll.dart';
 import '../utilities/game_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:tic_tac_toe/utilities/design_constants.dart';
@@ -27,10 +28,9 @@ class VictoryScreen extends StatelessWidget {
         break;
     }
     return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 100),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 50),
       child: SizedBox(
-        height: 230,
-        width: 100,
+        height: 600,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -43,7 +43,7 @@ class VictoryScreen extends StatelessWidget {
               victoryText,
               style: customTextStyle(20),
             ),
-            const SizedBox(height: 10,),
+            const HistoryScroll(),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);

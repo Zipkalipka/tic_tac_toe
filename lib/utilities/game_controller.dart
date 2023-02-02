@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/models/game_tile.dart';
 import 'win_condition_list.dart';
@@ -20,7 +19,7 @@ class GameController extends ChangeNotifier {
   late Result result;
   GameMode gameMode=GameMode.duel;
   GameState gameState=GameState.newGame;
-  int gameTurn = 1;
+  int gameTurn = 0;
 
   void soloMode (){
     gameMode=GameMode.solo;
@@ -50,7 +49,7 @@ class GameController extends ChangeNotifier {
 
   void startNewGame(){
     fieldSize=3;
-    gameTurn=1;
+    gameTurn=0;
     currentPlayer=Players.player1;
     gameState=GameState.newGame;
     initBoard();
@@ -67,6 +66,17 @@ class GameController extends ChangeNotifier {
     gameState=GameState.newGame;
   }
 
+  void resetBoard() {
+    for (var tiles in gameBoard) {
+      tiles.tileStatus = TileStatus.empty;
+      tiles.turn=0;
+    }
+    currentPlayer = Players.player1;
+    gameState=GameState.inProgress;
+    gameTurn=0;
+    notifyListeners();
+  }
+
   void updateTile(int tileId) {
     if (gameBoard[tileId].tileStatus == TileStatus.empty) {
       switch (currentPlayer) {
@@ -77,9 +87,6 @@ class GameController extends ChangeNotifier {
           gameBoard[tileId].tileStatus = TileStatus.circle;
           break;
       }
-      gameBoard[tileId].turn=gameTurn;
-      print(gameTurn);
-      gameTurn++;
 
       switch (winCheck(tileId, gameBoard, fieldSize)) {
         case null:
@@ -97,21 +104,25 @@ class GameController extends ChangeNotifier {
           gameState=GameState.ended;
           break;
       }
-      if ((gameState==GameState.inProgress)&&(gameMode==GameMode.duel)) {
+
+      if((gameMode==GameMode.duel)&&(gameState==GameState.inProgress)) {
         _changeTurn();
       }
+      if (gameState!=GameState.newGame){
+        _writeTurn(tileId);
+      }
+
+      var twoDgameboard = List.generate(fieldSize,
+              (i) => List.generate(fieldSize, (j) => gameBoard[i * fieldSize + j].turn));
+      print(twoDgameboard);
+
       notifyListeners();
     }
   }
 
-  void resetBoard() {
-    for (var tiles in gameBoard) {
-      tiles.tileStatus = TileStatus.empty;
-    }
-    currentPlayer = Players.player1;
-    gameState=GameState.inProgress;
-    gameTurn=1;
-    notifyListeners();
+  void _writeTurn(tileId){
+    gameBoard[tileId].turn=gameTurn;
+    gameTurn++;
   }
 
   void _changeTurn() {

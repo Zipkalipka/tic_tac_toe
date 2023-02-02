@@ -1,8 +1,5 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../models/game_tile.dart';
 import '../screens/victory_screen.dart';
 import '../utilities/game_controller.dart';
@@ -26,10 +23,10 @@ class GameBoard extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: gameController.fieldSize * gameController.fieldSize,
         itemBuilder: (context, index) {
-          Icon? gameIcon;
+          Icon gameIcon;
           switch (gameTiles[index].tileStatus) {
             case TileStatus.empty:
-              gameIcon = null;
+              gameIcon = const Icon(null);
               break;
             case TileStatus.cross:
               gameIcon = const Icon(Icons.close);
