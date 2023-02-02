@@ -226,16 +226,8 @@ class BottomPlayMode extends StatelessWidget {
           onLongPress: () {
             gameController.startNewGame();
           },
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:[
-                Text('Press to Restart',
-                  style: customTextStyle(25),),
-                Text('Hold for a New Game',
-                  style: customTextStyle(25),)
-              ]
-          )
+          child: Text('Press to Restart\nHold for a New Game',
+                  style: customTextStyle(25),textAlign: TextAlign.center,),
       ),
     ]
     );
