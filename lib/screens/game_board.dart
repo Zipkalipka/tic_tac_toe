@@ -3,28 +3,38 @@ import 'package:tic_tac_toe/utilities/game_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:tic_tac_toe/models/game_tile.dart';
 import 'victory_screen.dart';
+import 'package:tic_tac_toe/utilities/design_constants.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    GameController gameController = Provider.of<GameController>(context, listen: false);
-        gameController.initBoard();
+    GameController gameController =
+        Provider.of<GameController>(context, listen: false);
+    gameController.initBoard();
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          //crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TurnBox(),
-            SizedBox(height: 30),
-            GameBoard(),
+            const SizedBox(height: 180,),
+            const TurnBox(),
+            const SizedBox(height: 30),
+            const GameBoard(),
+            const SizedBox(height: 100,),
             ElevatedButton(
-                onPressed: () {
+              style: ElevatedButton.styleFrom(fixedSize: const Size(300,70)),
+                onPressed: (){},
+                onLongPress: () {
                   gameController.resetBoard();
+                  // showDialog(
+                  //     context: context,
+                  //     barrierDismissible: false,
+                  //     builder: (_) => const VictoryScreen());
                 },
-                child: Text('Reset'))
+                child: Text('Hold to Restart',style: customTextStyle(30),))
           ],
         ),
       ),
@@ -37,27 +47,22 @@ class TurnBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Consumer<GameController>(
-        builder: (context, gameController, child) {
-          String playerText;
-          switch (gameController.currentPlayer) {
-            case Players.player1:
-              playerText = 'Player 1 Turn';
-              break;
-            case Players.player2:
-              playerText = 'Player 2 Turn';
-              break;
-            case Players.ai:
-              playerText = 'AI Turn';
-              break;
-          }
-          return Text(
-            playerText,
-            style: TextStyle(fontSize: 50),
-          );
-        },
-      ),
+    return Consumer<GameController>(
+      builder: (context, gameController, child) {
+        String playerText;
+        switch (gameController.currentPlayer) {
+          case Players.player1:
+            playerText = 'Player 1 Turn';
+            break;
+          case Players.player2:
+            playerText = 'Player 2 Turn';
+            break;
+        }
+        return Text(
+          playerText,
+          style: customTextStyle(40),
+        );
+      },
     );
   }
 }
@@ -87,20 +92,22 @@ class GameBoard extends StatelessWidget {
               gameIcon = null;
               break;
             case TileStatus.cross:
-              gameIcon = const Icon(Icons.close);
+              gameIcon = const Icon(Icons.close,size: 60,);
               break;
             case TileStatus.circle:
-              gameIcon = const Icon(Icons.brightness_1_outlined);
+              gameIcon = const Icon(Icons.brightness_1_outlined,size: 50);
               break;
           }
           return ElevatedButton(
             onPressed: () {
-              var winner=gameController.updateTile(index);
-              if (winner!=null){
-                showDialog(context: context, builder: (_)=>VictoryScreen());
-              };
+              gameController.updateTile(index);
+              if (gameController.gameEnded) {
+                showDialog(
+                    context: context, builder: (_) => const VictoryScreen());
+              }
+              ;
             },
-            child: gameIcon,
+            child: FittedBox(child: gameIcon),
           );
         },
       ),

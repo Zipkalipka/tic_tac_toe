@@ -5,7 +5,7 @@ winCheck(int tileId, List<GameTile> gameTiles, int fieldSize) {
   int colWin;
   int diag1Win;
   int diag2Win;
-  var a = 0;
+  int emptySpaces=0;
   var twoDgameboard = List.generate(fieldSize,
       (i) => List.generate(fieldSize, (j) => gameTiles[i * fieldSize + j]));
 
@@ -16,6 +16,9 @@ winCheck(int tileId, List<GameTile> gameTiles, int fieldSize) {
       if (twoDgameboard[i][j].tileStatus == gameTiles[tileId].tileStatus) {
         rowWin = rowWin + 1;
       } else {
+        if (twoDgameboard[i][j].tileStatus == TileStatus.empty){
+          emptySpaces++;
+        }
         rowWin = 0;
       }
     }
@@ -61,4 +64,9 @@ winCheck(int tileId, List<GameTile> gameTiles, int fieldSize) {
   if (diag1Win == fieldSize) {
     return gameTiles[tileId].tileStatus;
   }
+
+  if (emptySpaces==0) {
+    return 'Draw';
+  }
+  return null;
 }

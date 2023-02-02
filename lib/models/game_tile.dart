@@ -1,4 +1,4 @@
-enum TileStatus { empty, cross, circle }
+ enum TileStatus { empty, cross, circle }
 
 class GameTile {
   int fieldId;

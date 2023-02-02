@@ -1,24 +1,24 @@
+
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/models/game_tile.dart';
 import 'win_condition_list.dart';
 
-enum Players { player1, player2, ai }
+enum Players {player1, player2}
+enum Result {player1Win, player2Win, draw}
 
 class GameController extends ChangeNotifier {
-  final fieldSize = 3;
+  int fieldSize = 3;
   late List<GameTile> gameBoard;
   Players currentPlayer = Players.player1;
-  Players winner = Players.player1;
+  Result result=Result.draw;
+  bool gameEnded = false;
 
   initBoard() {
-    // for (int i = 0; i <= fieldSize * fieldSize; i++) {
-    //   gameBoard.add(GameTile(i));
-    // }
     gameBoard = List<GameTile>.generate(fieldSize* fieldSize, (index) => GameTile(index));
     return gameBoard;
   }
 
-  updateTile(int tileId) {
+  void updateTile(int tileId) {
     if (gameBoard[tileId].tileStatus == TileStatus.empty) {
       switch (currentPlayer) {
         case Players.player1:
@@ -27,20 +27,26 @@ class GameController extends ChangeNotifier {
         case Players.player2:
           gameBoard[tileId].tileStatus = TileStatus.circle;
           break;
-        case Players.ai:
-          // TODO: Handle this case.
+      }
+      switch (winCheck(tileId, gameBoard, fieldSize)) {
+        case null:
+          break;
+        case 'Draw' :
+          result=Result.draw;
+          gameEnded = true;
+          break;
+        case TileStatus.circle:
+          result=Result.player2Win;
+          gameEnded = true;
+          break;
+        case TileStatus.cross:
+          result=Result.player1Win;
+          gameEnded = true;
           break;
       }
-      if (winCheck(tileId, gameBoard, fieldSize)!=null){
-        return Players.player1;
-      } else if (winner==TileStatus.circle){
-        return Players.player2;
-      }
-
       _changeTurn();
       notifyListeners();
     }
-    return null;
   }
 
   void resetBoard() {
@@ -55,5 +61,4 @@ class GameController extends ChangeNotifier {
     currentPlayer =
         (currentPlayer == Players.player1) ? Players.player2 : Players.player1;
   }
-
 }
