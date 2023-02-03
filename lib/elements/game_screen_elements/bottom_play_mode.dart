@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../utilities/design_constants.dart';
-import '../utilities/game_controller.dart';
+import '../../utilities/design_constants.dart';
+import '../../utilities/game_controller.dart';
 
 class BottomPlayMode extends StatelessWidget {
   const BottomPlayMode({Key? key}) : super(key: key);

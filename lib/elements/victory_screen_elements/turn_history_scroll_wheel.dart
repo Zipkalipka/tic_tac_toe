@@ -2,48 +2,64 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tic_tac_toe/utilities/game_controller.dart';
 import 'package:tic_tac_toe/models/game_tile.dart';
-import '../utilities/design_constants.dart';
+import '../../utilities/design_constants.dart';
 
 class HistoryScroll extends StatelessWidget {
   const HistoryScroll({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    GameController gameController =
-        Provider.of<GameController>(context, listen: false);
-    PageController pageController=PageController(viewportFraction: 0.8);
+    FixedExtentScrollController fixedExtentScrollController=FixedExtentScrollController();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       width: 350,
       height: 280,
-      child: PageView.builder(
-          itemCount: gameController.gameTurn,
-          controller: pageController,
-          physics: const BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          reverse: true,
-          itemBuilder: (_, index) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Turn ${gameController.gameTurn - index}',
-                  style: customTextStyle(20),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  width: 300,
-                  height: 250,
-                  child: HistoryGenerator(
-                    turnToRender: index,
-                  ),
-                ),
-              ],
-            );
-          }),
+      child: RotatedBox(
+        quarterTurns: 1,
+        child: ListWheelScrollView(
+            controller: fixedExtentScrollController,
+            //physics: const BouncingScrollPhysics(),
+            itemExtent: 10,
+            children: wheelGen(context),
+            ),
+      ),
     );
   }
+}
+
+List<Widget> wheelGen(context){
+  GameController gameController =
+  Provider.of<GameController>(context, listen: false);
+  return List<Widget>.generate(gameController.gameTurn, (index) {
+    return RotatedBox(
+      quarterTurns: -1,
+      child: wheelElement(index,context),
+    );
+  }
+  );
+}
+
+Widget wheelElement(index, context){
+  GameController gameController =
+  Provider.of<GameController>(context, listen: false);
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Text(
+        'Turn ${gameController.gameTurn - index}',
+        style: customTextStyle(20),
+      ),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        width: 300,
+        height: 250,
+        child: HistoryGenerator(
+          turnToRender: index,
+        ),
+      ),
+    ],
+  );
 }
 
 class HistoryGenerator extends StatelessWidget {

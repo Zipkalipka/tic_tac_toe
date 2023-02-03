@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../utilities/layout_selector.dart';
 
-class GameScreen extends StatelessWidget {
-  const GameScreen({Key? key}) : super(key: key);
+class Game extends StatelessWidget {
+  const Game({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

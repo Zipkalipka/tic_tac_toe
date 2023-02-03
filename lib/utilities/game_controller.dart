@@ -6,6 +6,7 @@ enum Players {player1, player2}
 enum Result {player1Win, player2Win, draw}
 enum GameState{newGame, inProgress, ended}
 enum GameMode{solo, duel}
+enum GameScreen{game, victory}
 
 class GameController extends ChangeNotifier {
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../modules/bottom_new_game.dart';
-import '../modules/bottom_play_mode.dart';
-import '../modules/game_mode_selection.dart';
-import '../modules/gameboard.dart';
-import '../modules/turn_box.dart';
+import '../elements/new_game_screen_elements/bottom_new_game.dart';
+import '../elements/game_screen_elements/bottom_play_mode.dart';
+import '../elements/new_game_screen_elements/game_mode_selection.dart';
+import '../elements/gameboard_gen.dart';
+import '../elements/game_screen_elements/turn_box.dart';
 import 'game_controller.dart';
 
 List<Widget> layoutSelector(context) {
@@ -13,13 +13,15 @@ List<Widget> layoutSelector(context) {
   if (gameController.gameState==GameState.newGame){
     layout=const [
       GameModeSelection(),
-      GameBoard(),
+      SizedBox.square(
+        dimension: 300,child: GameBoard(screen: GameScreen.game,),),
       BottomNewGame()
     ];
   } else {
     layout=const[
       TurnBox(),
-      GameBoard(),
+      SizedBox.square(
+          dimension: 300,child: GameBoard(screen: GameScreen.game),),
       BottomPlayMode()
     ];
   }

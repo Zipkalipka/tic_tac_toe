@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../utilities/design_constants.dart';
-import '../utilities/game_controller.dart';
+import '../../utilities/design_constants.dart';
+import '../../utilities/game_controller.dart';
 
 class TurnBox extends StatelessWidget {
   const TurnBox({Key? key}) : super(key: key);

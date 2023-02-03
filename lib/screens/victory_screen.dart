@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../modules/turn_history_scroll.dart';
+import '../elements/victory_screen_elements/turn_history_scroll_page_view.dart';
 import '../utilities/game_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:tic_tac_toe/utilities/design_constants.dart';

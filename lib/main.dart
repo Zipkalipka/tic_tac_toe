@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       create: (context)=>GameController(),
       child: const MaterialApp(
         title: 'Tic-Tac-Toe',
-        home: GameScreen(),
+        home: Game(),
         //navigatorKey: navigatorKey,
       ),
     );
