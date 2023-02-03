@@ -3,6 +3,6 @@ import 'package:flutter/material.dart';
 
 customTextStyle(double fontSize) {
   TextStyle customTextStyle = GoogleFonts.permanentMarker(
-    fontSize: fontSize, fontWeight: FontWeight.w100,);
+    fontSize: fontSize, fontWeight: FontWeight.w400,);
   return customTextStyle;
 }
