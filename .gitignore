@@ -44,3 +44,4 @@ app.*.map.json
 /android/app/release
 /lib/models/player.dart
 /lib/utilities/win_condition_trying_math.dart
+/lib/elements/victory_screen_elements/turn_history_scroll_wheel.dart
