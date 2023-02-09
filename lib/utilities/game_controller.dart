@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/models/game_tile.dart';
-import 'win_condition_list.dart';
+import 'win_condition_vector.dart';
 
 enum Players {player1, player2}
 enum Result {player1Win, player2Win, draw}
@@ -15,6 +15,7 @@ class GameController extends ChangeNotifier {
   }
 
   int fieldSize = 3;
+  int winScore=3;
   late List<GameTile> gameBoard;
   Players currentPlayer = Players.player1;
   late Result result;
@@ -30,6 +31,20 @@ class GameController extends ChangeNotifier {
   void duelMode(){
     gameMode=GameMode.duel;
     notifyListeners();
+  }
+
+  void decreaseWinScore() {
+    if (winScore>3){
+      winScore--;
+      notifyListeners();
+    }
+  }
+
+  void increaseWinScore() {
+    if (winScore<fieldSize){
+      winScore++;
+      notifyListeners();
+    }
   }
 
   void decreaseFieldSize() {
@@ -50,6 +65,7 @@ class GameController extends ChangeNotifier {
 
   void startNewGame(){
     fieldSize=3;
+    winScore=3;
     gameTurn=0;
     currentPlayer=Players.player1;
     gameState=GameState.newGame;
@@ -89,12 +105,8 @@ class GameController extends ChangeNotifier {
           break;
       }
 
-      switch (winCheck(tileId, gameBoard, fieldSize)) {
+      switch (winCheck(gameBoard[tileId], gameBoard, fieldSize,winScore)) {
         case null:
-          break;
-        case 'Draw' :
-          result=Result.draw;
-          gameState=GameState.ended;
           break;
         case TileStatus.circle:
           result=Result.player2Win;
@@ -104,6 +116,11 @@ class GameController extends ChangeNotifier {
           result=Result.player1Win;
           gameState=GameState.ended;
           break;
+      }
+
+      if (gameTurn==(fieldSize*fieldSize-1)){
+        result=Result.draw;
+        gameState=GameState.ended;
       }
 
       if((gameMode==GameMode.duel)&&(gameState==GameState.inProgress)) {

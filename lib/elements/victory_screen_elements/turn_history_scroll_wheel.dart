@@ -6,16 +6,12 @@ import '../../utilities/design_constants.dart';
 
 class HistoryScroll extends StatelessWidget {
   const HistoryScroll({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    GameController gameController = Provider.of<GameController>(context);
-    // FixedExtentScrollController fixedExtentScrollController =
-    //     FixedExtentScrollController();
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      width: 350,
-      height: 280,
+    GameController gameController = Provider.of<GameController>(context,listen: false);
+    return SizedBox(
+      width: 300,
+      height: 300,
       child: RotatedBox(
         quarterTurns: 1,
         child: ListWheelScrollView.useDelegate(
@@ -24,9 +20,8 @@ class HistoryScroll extends StatelessWidget {
 
           perspective: 0.001, //SUPER
           diameterRatio: 0.01,//FLIP
-          squeeze: 0.75,      //FLOP
+          squeeze: 0.84,      //FLOP
 
-          //controller: fixedExtentScrollController,
           physics: const FixedExtentScrollPhysics(),
           itemExtent: 250,
           childDelegate: ListWheelChildLoopingListDelegate(
@@ -49,16 +44,17 @@ class WheelElement extends StatelessWidget {
     return RotatedBox(
       quarterTurns: -1,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SizedBox(height: 10,),
           Text(
             'Turn ${gameController.gameTurn - index}',
             style: customTextStyle(20),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            width: 300,
+          SizedBox(
+            //padding: const EdgeInsets.symmetric(horizontal: 15),
+            width: 250,
             height: 250,
             child: GameBoard(
               turnToRender: index,
