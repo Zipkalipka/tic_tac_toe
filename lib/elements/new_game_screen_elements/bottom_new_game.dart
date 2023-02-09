@@ -13,7 +13,7 @@ class BottomNewGame extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(
-          height: 15,
+          height: 35,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -24,7 +24,9 @@ class BottomNewGame extends StatelessWidget {
                   'Victory Score',
                   style: customTextStyle(20),
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -33,32 +35,54 @@ class BottomNewGame extends StatelessWidget {
                         onPressed: () {
                           gameController.decreaseWinScore();
                         },
-                        child: const Icon(Icons.arrow_back_ios, size: fieldChangesIconSize)),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text('${gameController.winScore}', style: customTextStyle(20)),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(3.0),
+                          child: SizedBox.expand(
+                            child: FittedBox(
+                              child: Icon(
+                                Icons.arrow_back_ios_new,
+                                //    size: fieldChangesIconSize
+                              ),
+                            ),
+                          ),
+                        )),
+                    SizedBox(
+                        width: 50,
+                        child: Center(
+                            child: Text('${gameController.winScore}',
+                                style: customTextStyle(30)))),
                     ElevatedButton(
                         style: fieldChangesRightButtonStyle,
                         onPressed: () {
                           gameController.increaseWinScore();
                         },
-                        child: const Icon(Icons.arrow_forward_ios, size: fieldChangesIconSize))
+                        child: const Padding(
+                          padding: EdgeInsets.all(3.0),
+                          child: SizedBox.expand(
+                            child: FittedBox(
+                              child: Icon(
+                                Icons.arrow_forward_ios,
+                                //  size: fieldChangesIconSize
+                              ),
+                            ),
+                          ),
+                        ))
                   ],
                 ),
               ],
             ),
-            const SizedBox(width: 30,),
+            const SizedBox(
+              width: 30,
+            ),
             Column(
               children: [
                 Text(
                   'Choose Field Size',
                   style: customTextStyle(20),
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -67,20 +91,37 @@ class BottomNewGame extends StatelessWidget {
                         onPressed: () {
                           gameController.decreaseFieldSize();
                         },
-                        child: const Icon(Icons.arrow_back_ios, size: fieldChangesIconSize)),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text('${gameController.fieldSize}', style: customTextStyle(20)),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(3.0),
+                          child: SizedBox.expand(
+                            child: FittedBox(
+                                child: Icon(
+                              Icons.arrow_back_ios_new,
+                              //  size: fieldChangesIconSize
+                            )),
+                          ),
+                        )),
+                    SizedBox(
+                        width: 50,
+                        child: Center(
+                            child: Text('${gameController.fieldSize}',
+                                style: customTextStyle(30)))),
                     ElevatedButton(
                         style: fieldChangesRightButtonStyle,
                         onPressed: () {
                           gameController.increaseFieldSize();
                         },
-                        child: const Icon(Icons.arrow_forward_ios, size: fieldChangesIconSize))
+                        child: const Padding(
+                          padding: EdgeInsets.all(3.0),
+                          child: SizedBox.expand(
+                            child: FittedBox(
+                              child: Icon(
+                                Icons.arrow_forward_ios,
+                                //    size: fieldChangesIconSize
+                              ),
+                            ),
+                          ),
+                        ))
                   ],
                 ),
               ],
@@ -91,7 +132,8 @@ class BottomNewGame extends StatelessWidget {
           height: 30,
         ),
         ElevatedButton(
-            style: ElevatedButton.styleFrom(fixedSize: const Size(140, 60),padding: EdgeInsets.zero),
+            style: ElevatedButton.styleFrom(
+                fixedSize: const Size(140, 60), padding: EdgeInsets.zero),
             onPressed: () {
               gameController.start();
             },

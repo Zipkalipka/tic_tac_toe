@@ -7,11 +7,13 @@ customTextStyle(double fontSize) {
   return customTextStyle;
 }
 
-Size fieldChangesButtonSize = Size(40, 40);
-const double fieldChangesIconSize = 30;
+const Size fieldChangesButtonSize = Size(50, 50);
+//const double fieldChangesIconSize = 30;
 ButtonStyle fieldChangesLeftButtonStyle = ElevatedButton.styleFrom(
     fixedSize: fieldChangesButtonSize,
-    padding: const EdgeInsets.only(left: 17),
+    //alignment: Alignment.center,
+    //padding: const EdgeInsets.only(left: 17),
+    padding: EdgeInsets.zero,
     minimumSize: minimalFieldChangesButtonSize);
 ButtonStyle fieldChangesRightButtonStyle = ElevatedButton.styleFrom(
     fixedSize: fieldChangesButtonSize,

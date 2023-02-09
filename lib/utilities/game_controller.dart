@@ -50,6 +50,7 @@ class GameController extends ChangeNotifier {
   void decreaseFieldSize() {
     if (fieldSize>3){
       fieldSize--;
+      winScore=fieldSize;
       initBoard();
       notifyListeners();
     }
@@ -58,6 +59,7 @@ class GameController extends ChangeNotifier {
   void increaseFieldSize() {
     if (fieldSize<7){
       fieldSize++;
+      winScore=fieldSize;
       initBoard();
       notifyListeners();
     }
